@@ -19,9 +19,7 @@ class Dice:
             counts[value] = counts[value] + 1
 
         if counts.count(2) == 1:
-            return "One Pair", 5
-        else:
-            return "Garbage", 0
+            return "One Pair"
 
     def __init__(self):
         self.dice = [0]*2
@@ -29,14 +27,7 @@ class Dice:
 
 class Button:
 
-    """A button is a labeled rectangle in a window.
-    It is activated or deactivated with the activate()
-    and deactivate() methods. The clicked(p) method
-    returns true if the button is active and p is inside it."""
-
     def __init__(self, win, center, width, height, label):
-        """ Creates a rectangular button, eg:
-        qb = Button(myWin, Point(30,25), 20, 10, 'Quit') """
 
         w,h = width/2.0, height/2.0
         x,y = center.getX(), center.getY()
@@ -52,28 +43,28 @@ class Button:
         self.deactivate()
 
     def clicked(self, p):
-        "RETURNS true if button active and p is inside"
         return self.active and \
                self.xmin <= p.getX() <= self.xmax and \
                self.ymin <= p.getY() <= self.ymax
 
     def getLabel(self):
-        "RETURNS the label string of this button."
         return self.label.getText()
 
     def activate(self):
-        "Sets this button to 'active'."
         self.label.setFill('black')
         self.rect.setWidth(2)
         self.active = 1
 
     def deactivate(self):
-        "Sets this button to 'inactive'."
         self.label.setFill('darkgrey')
         self.rect.setWidth(1)
         self.active = 0
 
-class Player:
+class Gameplay:
+    def board(self):
+        flowerImage = Image(Point(280, 279), "parcheesi_board.png")
+        flowerImage.draw(self.win)
+
     def player(self):
         self.playerA1 = Circle(Point(443, 452), 10)
         self.playerA1.setFill("red")
@@ -155,16 +146,11 @@ class Player:
         self.playerD4.draw(self.win)
         self.D4 = 0
 
-class Board:
-    def board(self):
-        flowerImage = Image(Point(280, 279), "parcheesi_board.png")
-        flowerImage.draw(self.win)
-
     def buttons(self):
         self.rollDice = Button(self.win, Point(117, 622), 100, 100, "Roll Dice")
         self.rollDice.activate()
 
-        self.exitButton = Button(self.win, Point(402, 620), 100, 100, "EXIT")
+        self.exitButton = Button(self.win, Point(430, 620), 100, 100, "EXIT")
         self.exitButton.activate()
 
         while(True):
@@ -174,9 +160,26 @@ class Board:
                 self.dice.roll([0])
                 self.dice.roll([1])
                 print(self.dice.values())
+                return self.dice.values()
             elif (self.exitButton.clicked(mouseClick)):
-                print("Quit")
+                return 0
+            else:
+                continue
+
+    def game(self):
+        self.dice1 = Rectangle(Point(212, 596), Point(260, 640))
+        self.dice1.setFill("red")
+        self.dice1.draw(self.win)
+
+        self.dice2 = self.dice1.clone()
+        self.dice2.move(70, 0)
+        self.dice2.draw(self.win)
+
+        while (True):
+            if (self.buttons() == 0):
                 break
+            else:
+                self.x = self.buttons()
 
     def __init__(self):
         self.win = GraphWin("Parcheesi", 560, 700)
@@ -184,9 +187,10 @@ class Board:
         self.board()
         self.player()
         self.buttons()
+        self.game()
 
 def main():
-    board = Board()
+    board = Gameplay()
 
 if __name__ == "__main__":
     main()
