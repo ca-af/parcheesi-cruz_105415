@@ -146,7 +146,37 @@ class Gameplay:
         self.playerD4.draw(self.win)
         self.D4 = 0
 
+    def movePlayer(self, x, y):
+        print(x)
+        if (x == 5 and y == 5):
+            self.playerA1.undraw()
+            self.playerA1 = Circle(Point(338, 449), 10)
+            self.playerA1.setFill("red")
+            self.playerA1.draw(self.win)
+        elif (x == 5 or y == 5):
+            if (self.A1 == 0):
+                self.A1 = 1
+                self.playerA1.undraw()
+                self.playerA1 = Circle(Point(338, 449), 10)
+                self.playerA1.setFill("red")
+                self.playerA1.draw(self.win)
+            else:
+                self.playerA1.move(0, -8*5)
+
+    def dices(self):
+        self.diceA = Rectangle(Point(212, 596), Point(260, 640))
+        self.diceA.setFill("red")
+        self.diceA.draw(self.win)
+
+        self.diceB = self.diceA.clone()
+        self.diceB.move(70, 0)
+        self.diceB.draw(self.win)
+
     def buttons(self):
+        self.pickKey = Text(Point(269, 662),
+                            "Hit the Roll Dice Button to roll the dice!")
+        self.pickKey.draw(self.win)
+
         self.rollDice = Button(self.win, Point(117, 622), 100, 100, "Roll Dice")
         self.rollDice.activate()
 
@@ -159,34 +189,44 @@ class Gameplay:
             if (self.rollDice.clicked(mouseClick)):
                 self.dice.roll([0])
                 self.dice.roll([1])
-                print(self.dice.values())
                 return self.dice.values()
             elif (self.exitButton.clicked(mouseClick)):
-                return 0
-            else:
-                continue
+                exit()
 
     def game(self):
-        self.dice1 = Rectangle(Point(212, 596), Point(260, 640))
-        self.dice1.setFill("red")
-        self.dice1.draw(self.win)
-
-        self.dice2 = self.dice1.clone()
-        self.dice2.move(70, 0)
-        self.dice2.draw(self.win)
-
         while (True):
-            if (self.buttons() == 0):
-                break
-            else:
-                self.x = self.buttons()
+                diceX, diceY = self.buttons()
+
+                diceXText = Text(Point(240, 584), "Dice 1: ")
+                diceXText.setFace("courier")
+                diceXText.setSize(10)
+                diceXText.draw(self.win)
+                diceXTextNumber = Text(Point(235, 618), diceX)
+                diceXTextNumber.setFace("times roman")
+                diceXTextNumber.setTextColor("white")
+                diceXTextNumber.draw(self.win)
+
+                diceYText = Text(Point(310, 584), "Dice 2: ")
+                diceYText.setFace("courier")
+                diceYText.setSize(10)
+                diceYText.draw(self.win)
+                diceYTextNumber = Text(Point(305, 618), diceY)
+                diceYTextNumber.setFace("times roman")
+                diceYTextNumber.setTextColor("white")
+                diceYTextNumber.draw(self.win)
+
+                if (diceX == 5 or diceY == 5 or (diceX + diceY) == 10):
+                    self.move = self.movePlayer(diceX, diceY)
 
     def __init__(self):
         self.win = GraphWin("Parcheesi", 560, 700)
         self.dice = Dice()
         self.board()
         self.player()
+        self.dices()
         self.buttons()
+        x = self.win.getMouse()
+        print(x)
         self.game()
 
 def main():
