@@ -1,7 +1,7 @@
 """
 Programado por: Andy Cruz - 105415
 29 de octubre de 2020
-CECS3210 – 39
+CECS3210 – 39 - SPRING-20
 Prof. Edwin Flórez Gómez"""
 import graphics
 import random
