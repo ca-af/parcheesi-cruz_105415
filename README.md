@@ -1,6 +1,4 @@
-# parcheesi-cruz_105415
-
-PARCHEESI
+PARCHEESI - cruz_105415
 =================================================
 
 Programado por: Andy Cruz - 105415
