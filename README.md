@@ -64,7 +64,7 @@ Next, provide step-by-step instructions for installing the software, preferably 
 Known issues and limitations
 ----------------------------
 
-**The program is not finished.** The board, dices, and pieces are all displayed. However, the rules, piece movement, and player interaction has not been placed yet.
+**This program is not finished.** The board, dices, and pieces are all displayed. However, the rules, piece movement, and player interaction has not been placed yet.
 
 
 References
