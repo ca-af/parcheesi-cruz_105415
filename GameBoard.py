@@ -1,18 +1,39 @@
+"""
+Programado por: Andy Cruz - 105415
+29 de octubre de 2020
+CECS3210 – 39
+Prof. Edwin Flórez Gómez"""
 import graphics
 import random
 from graphics import *
 
+"""
+EL Dice class es utilizado para identificar el numero que cae el
+dice cuando el jugador lo enrolla.
+"""
 class Dice:
+    """
+    El roll función se utiliza para enrollar los dices con los
+    valores del 1 al 7.
+    """
     def roll(self, which):
         for pos in which:
             self.dice[pos] = random.randrange(1, 7)
-
+    """
+    El rollAll se utiliza para enrollar todos los dices.
+    """
     def rollAll(self):
         self.roll(range(2))
-
+    """
+    El values función se utiliza para enseñar el valor de todos los
+    dices.
+    """
     def values(self):
         return self.dice[:]
-
+    """
+    El score función es utilizado para enseñar que tipo de score el usuario
+    recibió dependiendo de los valores de los dices.
+    """
     def score(self):
         counts = [0] * 7
         for value in self.dice:
@@ -24,7 +45,9 @@ class Dice:
     def __init__(self):
         self.dice = [0]*2
         self.rollAll()
-
+"""
+El class button es utilizado para crear botones para el juego.
+"""
 class Button:
 
     def __init__(self, win, center, width, height, label):
@@ -41,30 +64,51 @@ class Button:
         self.label = Text(center, label)
         self.label.draw(win)
         self.deactivate()
-
+    """
+    El clicked function es utilizado para determinar si el botón fue
+    dado o no.
+    """
     def clicked(self, p):
         return self.active and \
                self.xmin <= p.getX() <= self.xmax and \
                self.ymin <= p.getY() <= self.ymax
 
+    """
+    El getLabel function es utilizado para adquirir el texto del botón
+    """
     def getLabel(self):
         return self.label.getText()
-
+    """
+    El activate function es utilizado para activar un botón creado.
+    """
     def activate(self):
         self.label.setFill('black')
         self.rect.setWidth(2)
         self.active = 1
-
+    """
+    El deactivate function es utilizado para desactivar un botón activado.
+    """
     def deactivate(self):
         self.label.setFill('darkgrey')
         self.rect.setWidth(1)
         self.active = 0
 
+"""
+El Gameplay class es utilizado para empezar el juego con las piezas,
+el board, y las reglas.
+"""
 class Gameplay:
+    """
+    El board function es utilizado para crear el window del juego
+    acompañado con el board del juego.
+    """
     def board(self):
-        flowerImage = Image(Point(280, 279), "parcheesi_board.png")
-        flowerImage.draw(self.win)
-
+        gameImage = Image(Point(280, 279), "parcheesi_board.png")
+        gameImage.draw(self.win)
+    """
+    El player function es utilizado para crear todas las piezas para los
+    jugadores.
+    """
     def player(self):
         self.playerA1 = Circle(Point(443, 452), 10)
         self.playerA1.setFill("red")
@@ -146,8 +190,12 @@ class Gameplay:
         self.playerD4.draw(self.win)
         self.D4 = 0
 
+    """
+    El movePLayer function es utilizado para determinar que tipo
+    de acción haría la pieza del jugador dependiendo del valor
+    de los dices.
+    """
     def movePlayer(self, x, y):
-        print(x)
         if (x == 5 and y == 5):
             self.playerA1.undraw()
             self.playerA1 = Circle(Point(338, 449), 10)
@@ -162,7 +210,9 @@ class Gameplay:
                 self.playerA1.draw(self.win)
             else:
                 self.playerA1.move(0, -8*5)
-
+    """
+    El dices function dibuja los dices en el window del juego.
+    """
     def dices(self):
         self.diceA = Rectangle(Point(212, 596), Point(260, 640))
         self.diceA.setFill("red")
@@ -172,17 +222,24 @@ class Gameplay:
         self.diceB.move(70, 0)
         self.diceB.draw(self.win)
 
-    def buttons(self):
-        self.pickKey = Text(Point(269, 662),
+        self.pickKey = Text(Point(275, 685),
                             "Hit the Roll Dice Button to roll the dice!")
         self.pickKey.draw(self.win)
+    """
+    El buttons function es utilizado para crear los botones para el juego con
+    el Button class.
+    """
+    def buttons(self):
 
         self.rollDice = Button(self.win, Point(117, 622), 100, 100, "Roll Dice")
         self.rollDice.activate()
 
         self.exitButton = Button(self.win, Point(430, 620), 100, 100, "EXIT")
         self.exitButton.activate()
-
+        """
+        Verifica que tipo de valor tiene los dices cuando el usuario le da al
+        "Roll Dice" button.
+        """
         while(True):
             mouseClick = self.win.getMouse()
 
@@ -192,24 +249,44 @@ class Gameplay:
                 return self.dice.values()
             elif (self.exitButton.clicked(mouseClick)):
                 exit()
-
+    """
+    El game function es utilizado para dibujar los valores de los dices
+    y verificar que tipo de acción haria el jugador con el movePlayer
+    function.
+    """
     def game(self):
+
+        diceXText = Text(Point(240, 584), "Dice 1: ")
+        diceXText.setFace("courier")
+        diceXText.setSize(10)
+        diceXText.draw(self.win)
+        diceYText = Text(Point(310, 584), "Dice 2: ")
+        diceYText.setFace("courier")
+        diceYText.setSize(10)
+        diceYText.draw(self.win)
+
+        diceXTextNumber = Text(Point(235, 618), "0")
+        diceXTextNumber.setFace("times roman")
+        diceXTextNumber.setTextColor("white")
+        diceXTextNumber.draw(self.win)
+
+        diceYTextNumber = Text(Point(305, 618), "0")
+        diceYTextNumber.setFace("times roman")
+        diceYTextNumber.setTextColor("white")
+        diceYTextNumber.draw(self.win)
+        """
+        Dibuja el valor del dice con el buttons función.
+        """
         while (True):
                 diceX, diceY = self.buttons()
 
-                diceXText = Text(Point(240, 584), "Dice 1: ")
-                diceXText.setFace("courier")
-                diceXText.setSize(10)
-                diceXText.draw(self.win)
+                diceXTextNumber.undraw()
                 diceXTextNumber = Text(Point(235, 618), diceX)
                 diceXTextNumber.setFace("times roman")
                 diceXTextNumber.setTextColor("white")
                 diceXTextNumber.draw(self.win)
 
-                diceYText = Text(Point(310, 584), "Dice 2: ")
-                diceYText.setFace("courier")
-                diceYText.setSize(10)
-                diceYText.draw(self.win)
+                diceYTextNumber.undraw()
                 diceYTextNumber = Text(Point(305, 618), diceY)
                 diceYTextNumber.setFace("times roman")
                 diceYTextNumber.setTextColor("white")
@@ -225,12 +302,15 @@ class Gameplay:
         self.player()
         self.dices()
         self.buttons()
-        x = self.win.getMouse()
-        print(x)
         self.game()
-
+"""
+Gameplay object esta creado.
+"""
 def main():
     board = Gameplay()
 
+"""
+El main function esta llamado.
+"""
 if __name__ == "__main__":
     main()
